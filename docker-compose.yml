@@ -2,7 +2,7 @@ services:
 
   nginx:
     image: nginx:alpine
-    container_name: stock_wp_nginx
+    container_name: wp_nginx
     restart: unless-stopped
     ports:
       - "${NGINX_PORT:-8080}:80"
@@ -24,11 +24,11 @@ services:
       retries: 3
       start_period: 15s
     networks:
-      - stock_wp_net
+      - wp_net
 
   php:
     image: wordpress:php8.3-fpm-alpine        
-    container_name: stock_wp_php
+    container_name: wp_php
     restart: unless-stopped
     volumes:
       - wordpress_core:/var/www/html
@@ -66,11 +66,11 @@ services:
       retries: 3
       start_period: 20s
     networks:
-      - stock_wp_net
+      - wp_net
 
   mysql:
     image: mysql:9.0                         
-    container_name: stock_wp_mysql
+    container_name: wp_mysql
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -88,11 +88,11 @@ services:
       retries: 5
       start_period: 30s
     networks:
-      - stock_wp_net
+      - wp_net
 
   phpmyadmin:
     image: phpmyadmin:latest
-    container_name: stock_wp_phpmyadmin
+    container_name: wp_phpmyadmin
     restart: unless-stopped
     ports:
       - "${PHPMYADMIN_PORT:-8081}:80"
@@ -105,17 +105,17 @@ services:
       mysql:
         condition: service_healthy
     networks:
-      - stock_wp_net
+      - wp_net
 
 networks:
-  stock_wp_net:
+  wp_net:
     driver: bridge
-    name: stock_wp_net
+    name: wp_net
 
 volumes:
   wordpress_core:
-    name: stock_wp_core
+    name: wp_core
   wp_uploads:
-    name: stock_wp_uploads
+    name: wp_uploads
   mysql_data:
-    name: stock_wp_mysql_data
+    name: wp_mysql_data
